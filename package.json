@@ -1,0 +1,39 @@
+{
+  "name": "devconnecter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "server": "nodemon --exec babel-node -- ./server.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JerbyIchrak/DevConnector.git"
+  },
+  "author": "Jerbi Ichrak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JerbyIchrak/DevConnector/issues"
+  },
+  "homepage": "https://github.com/JerbyIchrak/DevConnector#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.8.11",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "validator": "^12.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/register": "^7.8.3",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "nodemon": "^2.0.2"
+  }
+}
