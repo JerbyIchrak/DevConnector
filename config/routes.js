@@ -1,7 +1,7 @@
 import express from "express";
 import usersRoute from "../models/users/usersRoutes";
-import profilesRoute from "../models/users/profilesRoutes";
-import postsRoute from "../models/users/postsRoutes";
+import profilesRoute from "../models/profile/profilesRoutes";
+import postsRoute from "../models/posts/postsRoutes";
 
 const router = express.Router();
 
