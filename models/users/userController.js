@@ -1,5 +1,7 @@
 import User from "./User";
 import _ from "lodash";
+import bcrypt from "bcryptjs";
+import gravatar from "gravatar";
 
 export async function create(req, res) {
   console.log("********************Post************************");
@@ -21,13 +23,57 @@ export async function create(req, res) {
             error: "password is required !"
           });
 
+        const avatar = gravatar.url(req.body.email, {
+          s: "200",
+          r: "pg",
+          d: "mm"
+        });
         let user = _.pick(req.body, "name", "email");
         user.password = req.body.password;
+        user.avatar = avatar;
 
         user = await User.create(user);
 
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(user.password, salt, (err, hash) => {
+            if (err) throw err;
+            user.password = hash;
+            user
+              .save()
+              .then(user => res.json(user))
+              .catch(err => console.log(err));
+          });
+        });
+
         return res.json(user);
       }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+export async function login(req, res) {
+  try {
+    if (!req.body.email) {
+      return res.status(400).json("email is required !");
+    }
+    if (!req.body.password) {
+      return res.status(400).json("password is required !");
+    }
+    User.findOne({ email: req.body.email }).then(user => {
+      if (!user) {
+        return res.status(404).json({ email: "user not found !" });
+      }
+      bcrypt.compare(req.body.password, user.password).then(isMatch => {
+        console.log(isMatch);
+        if (isMatch) {
+          res.json({ msg: "success" });
+        } else {
+          return res.status(400).json({ password: "password is incorrect !" });
+        }
+      });
     });
   } catch (error) {
     console.log(error);
