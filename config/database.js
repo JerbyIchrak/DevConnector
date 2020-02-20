@@ -4,6 +4,7 @@ import { DB } from "./keys";
 mongoose.connect(
   DB,
   {
+    useUnifiedTopology: true,
     useNewUrlParser: true
   },
   err => {

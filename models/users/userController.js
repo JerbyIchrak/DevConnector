@@ -2,6 +2,25 @@ import User from "./User";
 import _ from "lodash";
 import bcrypt from "bcryptjs";
 import gravatar from "gravatar";
+import jwt from "jsonwebtoken";
+import { secretOrKey } from "../../config/keys";
+import passport from "passport";
+
+export async function authenticate(req, res) {
+  try {
+    passport.authenticate("jwt", { session: false }, (err, user, info) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(req.user);
+        res.json(200).send({ msg: "Success here !!" });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
 
 export async function create(req, res) {
   console.log("********************Post************************");
@@ -67,9 +86,22 @@ export async function login(req, res) {
         return res.status(404).json({ email: "user not found !" });
       }
       bcrypt.compare(req.body.password, user.password).then(isMatch => {
-        console.log(isMatch);
         if (isMatch) {
-          res.json({ msg: "success" });
+          //user matched
+          //create jwt payload
+          const payload = {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar
+          };
+
+          //sign Token
+          jwt.sign(payload, secretOrKey, { expiresIn: 18000 }, (err, token) => {
+            res.json({
+              success: true,
+              token: "Bearer " + token
+            });
+          });
         } else {
           return res.status(400).json({ password: "password is incorrect !" });
         }
